@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zyn Graphics — Portfolio</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <link rel="prefetch" href="reviews.html">
+  <link rel="prefetch" href="contact.html">
+  <link rel="prefetch" href="commissions.html">
+  <style>
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 0 48px 120px; position: relative; overflow: hidden; background: #070a0f;
+    }
+    #heroCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-overlay {
+      position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      background: radial-gradient(ellipse 55% 50% at 60% 55%, rgba(0,245,255,0.04) 0%, transparent 65%),
+                  radial-gradient(ellipse 40% 55% at 10% 70%, rgba(255,0,110,0.035) 0%, transparent 65%);
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 860px; }
+
+    /* Eyebrow tag — Zyn mono style (30%) */
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: 11px; color: var(--cyan);
+      letter-spacing: 4px; text-transform: uppercase;
+      margin-bottom: 24px; opacity: 0.7;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-eyebrow-bar { width: 32px; height: 1px; background: var(--cyan); opacity: 0.6; }
+
+    /* Stacked display — Zyn Bebas (30%) */
+    .hero-stack { margin-bottom: 28px; }
+    .hs-line { font-family: var(--display); display: block; line-height: 0.88; letter-spacing: 3px; }
+    .hs-white   { font-size: clamp(70px, 11.5vw, 155px); color: #fff; }
+    .hs-cyan    { font-size: clamp(70px, 11.5vw, 155px); color: var(--cyan); text-shadow: 0 0 36px rgba(0,245,255,0.4), 0 0 70px rgba(0,245,255,0.15); }
+    .hs-outline { font-size: clamp(70px, 11.5vw, 155px); color: transparent; -webkit-text-stroke: 1.5px rgba(0,245,255,0.5); }
+
+    /* Sub — Webdorks Inter (70%) */
+    .hero-sub {
+      font-family: var(--sans); font-size: 17px; font-weight: 300;
+      color: var(--text); line-height: 1.75; max-width: 460px; margin-bottom: 36px;
+    }
+
+    /* Buttons row */
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+
+    /* Work toggle — Webdorks pill */
+    .btn-hero-primary {
+      font-family: var(--sans); font-size: 14px; font-weight: 500;
+      color: #000; background: #fff; border: none;
+      padding: 13px 28px; border-radius: 999px; cursor: none;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: all 0.22s; letter-spacing: -0.1px;
+    }
+    .btn-hero-primary:hover { background: #e2e8f0; transform: translateY(-1px); box-shadow: 0 10px 32px rgba(0,0,0,0.5); }
+    .btn-hero-primary .arrow { transition: transform 0.3s; font-size: 12px; }
+    .btn-hero-primary.open .arrow { transform: rotate(180deg); }
+
+    /* Contact pill — Webdorks ghost */
+    .btn-hero-ghost {
+      font-family: var(--sans); font-size: 14px; font-weight: 400;
+      color: var(--text-hi); border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04); padding: 12px 24px;
+      border-radius: 999px; text-decoration: none;
+      transition: all 0.22s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-hero-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.08); }
+
+    /* Stats — Webdorks clean numbers, right column */
+    .hero-stats {
+      position: absolute; right: 60px; bottom: 148px;
+      display: flex; flex-direction: column; gap: 24px; z-index: 2;
+    }
+    .stat-item { text-align: right; }
+    .stat-num {
+      font-family: var(--sans); font-size: 36px; font-weight: 700;
+      color: #fff; line-height: 1; letter-spacing: -1px;
+    }
+    .stat-num span { color: var(--cyan); }
+    .stat-lbl {
+      font-family: var(--sans); font-size: 12px; font-weight: 400;
+      color: var(--text); opacity: 0.45; margin-top: 2px;
+    }
+
+    /* Scrolling strip — Webdorks client row */
+    .hero-strip {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      height: 52px; border-top: 1px solid var(--border);
+      background: rgba(7,10,15,0.75); backdrop-filter: blur(14px);
+      display: flex; align-items: center; gap: 32px; padding: 0 40px;
+      overflow: hidden;
+    }
+    .strip-label {
+      font-family: var(--sans); font-size: 11px; font-weight: 500;
+      color: rgba(255,255,255,0.25); white-space: nowrap; flex-shrink: 0;
+    }
+    .strip-sep { width: 1px; height: 18px; background: var(--border2); flex-shrink: 0; }
+    .strip-scroll {
+      display: flex; gap: 40px; align-items: center;
+      animation: loopScroll 24s linear infinite; white-space: nowrap;
+    }
+    .strip-scroll:hover { animation-play-state: paused; }
+    @keyframes loopScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .strip-item {
+      font-family: var(--sans); font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.28); letter-spacing: 0.3px;
+      transition: color 0.2s; white-space: nowrap;
+    }
+    .strip-item:hover { color: rgba(255,255,255,0.75); }
+
+    /* Mobile stats */
+    .hero-stats-mob {
+      display: none; flex-direction: row; justify-content: space-around;
+      padding: 22px 24px; background: var(--dark2); border-top: 1px solid var(--border);
+    }
+    .hero-stats-mob .stat-item { text-align: center; }
+    .hero-stats-mob .stat-num { font-size: 28px; }
+
+    /* ── ABOUT (Webdorks layout) ── */
+    #about { background: var(--dark2); }
+    .about-wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; max-width: 1100px; }
+    .about-img-wrap { position: relative; }
+    .about-img-inner {
+      aspect-ratio: 4/5; max-width: 340px; overflow: hidden; border-radius: 20px;
+      border: 1px solid var(--border2);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    }
+    .about-img-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Zyn accent frame corners (30%) */
+    .about-img-wrap::before {
+      content: ''; position: absolute; top: -10px; left: -10px; width: 28px; height: 28px;
+      border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan);
+      border-radius: 4px 0 0 0; box-shadow: 0 0 12px rgba(0,245,255,0.3);
+    }
+    .about-img-wrap::after {
+      content: ''; position: absolute; bottom: -10px; right: -10px; width: 28px; height: 28px;
+      border-bottom: 2px solid var(--magenta); border-right: 2px solid var(--magenta);
+      border-radius: 0 0 4px 0; box-shadow: 0 0 12px rgba(255,0,110,0.3);
+    }
+
+    .about-body {}
+    .about-name {
+      font-family: var(--sans); font-size: 36px; font-weight: 700;
+      color: var(--white); letter-spacing: -0.5px; margin-bottom: 6px;
+    }
+    .about-role-tag {
+      font-family: var(--mono); font-size: 11px; color: var(--cyan);
+      letter-spacing: 3px; text-transform: uppercase; opacity: 0.75; margin-bottom: 22px;
+    }
+    .about-bio {
+      font-size: 16px; font-weight: 300; line-height: 1.8;
+      color: var(--text); margin-bottom: 28px;
+    }
+    .skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-pill {
+      font-family: var(--sans); font-size: 12px; font-weight: 500;
+      color: var(--text-hi); background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border2); border-radius: 999px;
+      padding: 6px 16px; transition: all 0.2s;
+    }
+    .skill-pill:hover { background: rgba(0,245,255,0.08); border-color: rgba(0,245,255,0.3); color: var(--cyan); }
+
+    /* ── PROJECTS (Zyn bento stays 30%) ── */
+    #projects { background: var(--dark); padding-top: 0; }
+    .projects-dropdown { max-height: 0; overflow: hidden; transition: max-height 1.2s cubic-bezier(0.4,0,0.2,1), opacity 0.6s; opacity: 0; }
+    .projects-dropdown.open { max-height: 4000px; opacity: 1; }
+    .projects-inner { padding: 80px 48px 100px; }
+    .projects-bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+    .project-card { display: none; }
+    .project-card.has-image { display: block; }
+    .project-card:nth-child(1) { grid-column: span 7; }
+    .project-card:nth-child(2) { grid-column: span 5; }
+    .project-card:nth-child(3) { grid-column: span 4; }
+    .project-card:nth-child(4) { grid-column: span 4; }
+    .project-card:nth-child(5) { grid-column: span 4; }
+    .project-card:nth-child(6) { grid-column: span 6; }
+    .project-card:nth-child(7) { grid-column: span 6; }
+    .project-card {
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; position: relative; transition: all 0.3s ease;
+    }
+    .project-card.has-image:hover { border-color: rgba(0,245,255,0.25); transform: translateY(-3px); box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 24px rgba(0,245,255,0.06); }
+    .project-img { width: 100%; aspect-ratio: 16/9; background: var(--dark2); overflow: hidden; }
+    .project-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.88; transition: transform 0.5s, opacity 0.3s; }
+    .project-card.has-image:hover .project-img img { transform: scale(1.04); opacity: 1; }
+    .project-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(7,10,15,0.95) 0%, rgba(7,10,15,0.2) 50%, transparent 100%); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 18px; }
+    .project-card.has-image:hover .project-overlay { opacity: 1; }
+    .project-view-btn { font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--white); text-decoration: none; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; backdrop-filter: blur(8px); transition: all 0.2s; }
+    .project-view-btn:hover { background: rgba(255,255,255,0.2); }
+    .project-info { padding: 16px 18px 18px; }
+    .project-category { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; opacity: 0.7; }
+    .project-card:nth-child(odd) .project-category { color: var(--cyan); }
+    .project-card:nth-child(even) .project-category { color: var(--magenta); }
+    .project-card:nth-child(3) .project-category, .project-card:nth-child(7) .project-category { color: var(--yellow); }
+    .project-title { font-family: var(--sans); font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 4px; letter-spacing: -0.2px; }
+    .project-desc { font-size: 13px; color: var(--text); opacity: 0.55; line-height: 1.5; }
+    .projects-empty { display: none; text-align: center; padding: 60px 0; font-family: var(--mono); font-size: 13px; color: var(--cyan); opacity: 0.35; letter-spacing: 2px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .hero { padding: 80px 24px 110px; min-height: 100svh; }
+      .hero-stats { display: none; }
+      .hero-stats-mob { display: flex; }
+      .hero-strip { display: none; }
+      .about-wrap { grid-template-columns: 1fr; gap: 36px; }
+      .about-img-inner { max-width: 260px; }
+      .projects-bento { grid-template-columns: 1fr; }
+      .project-card:nth-child(n) { grid-column: span 1; }
+      .projects-inner { padding: 40px 20px 60px; }
+    }
+    @media (max-width: 768px) and (orientation: landscape) {
+      .hero-stats { display: flex; right: 20px; bottom: 20px; }
+      .hero-stats-mob { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ═══ NAV ═══ -->
+  <nav>
+    <a href="index.html" class="nav-logo">Zyn Graphics</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#" onclick="toggleWork(event)">Work</a></li>
+      <li><a href="commissions.html">Commissions</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="nav-dots" aria-label="Menu grid">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero" id="home">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content fade-up">
+      <p class="hero-eyebrow"><span class="hero-eyebrow-bar"></span>GFX Artist &amp; Visual Designer</p>
+      <div class="hero-stack">
+        <!-- ✏️ Change these 3 lines to your brand words -->
+        <span class="hs-line hs-white glitch" data-text="ZYNKRIS">ZYNKRIS</span>
+        <span class="hs-line hs-cyan">GRAPHICS</span>
+        <span class="hs-line hs-outline">STUDIO</span>
+      </div>
+      <p class="hero-sub">Creating visuals that live at the edge of imagination — branding, motion, and digital art built for the future.</p>
+      <div class="hero-btns">
+        <button class="btn-hero-primary" id="workBtn" onclick="toggleWork(event)">
+          View My Work <span class="arrow">↓</span>
+        </button>
+        <a href="contact.html" class="btn-hero-ghost">Contact Us →</a>
+      </div>
+    </div>
+
+    <!-- ✏️ Update stat numbers -->
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">30<span>+</span></div><div class="stat-lbl">Projects Done</div></div>
+      <div class="stat-item"><div class="stat-num">15<span>+</span></div><div class="stat-lbl">Clients Served</div></div>
+      <div class="stat-item"><div class="stat-num">1.3<span>+</span></div><div class="stat-lbl">Years Active</div></div>
+    </div>
+
+    <!-- ✏️ Edit strip items — keep both halves identical for seamless loop -->
+    <div class="hero-strip">
+      <span class="strip-label">Tools & Services</span>
+      <div class="strip-sep"></div>
+      <div class="strip-scroll">
+        <span class="strip-item">Blender</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Photopea</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Roblox GFX</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Digital Art</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Logo Design</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Thumbnails</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Branding</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Motion</span>
+        <span class="strip-item">·</span>
+        <!-- duplicate -->
+        <span class="strip-item">Blender</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Photopea</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Roblox GFX</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Digital Art</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Logo Design</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Thumbnails</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Branding</span>
+        <span class="strip-item">·</span>
+        <span class="strip-item">Motion</span>
+        <span class="strip-item">·</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile stats -->
+  <div class="hero-stats-mob">
+    <div class="stat-item"><div class="stat-num">30<span>+</span></div><div class="stat-lbl">Projects</div></div>
+    <div class="stat-item"><div class="stat-num">15<span>+</span></div><div class="stat-lbl">Clients</div></div>
+    <div class="stat-item"><div class="stat-num">1.3<span>+</span></div><div class="stat-lbl">Years</div></div>
+  </div>
+
+  <!-- ═══ PROJECTS DROPDOWN ═══ -->
+  <div id="projects" class="projects-dropdown">
+    <div class="projects-inner">
+      <div class="section-header">
+        <span class="section-tag">// 002</span>
+        <h2 class="section-title">WORK</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="projects-bento" id="projectsBento">
+        <div class="project-card" data-slot="1">
+          <div class="project-img"><img src="images/pro1.png" alt="HAIKYUU!" loading="lazy"/></div>
+          <div class="project-info"><p class="project-category">Digital Art</p><h3 class="project-title">Haikyuu Inspiration</h3><p class="project-desc">Seijoh vs Karasuno depicted by roblox characters.</p></div>
+          <div class="project-overlay"><a href="#" class="project-view-btn">View Project →</a></div>
+        </div>
+        <div class="project-card" data-slot="2">
+          <div class="project-img"><img src="images/pro2.png" alt="Football" loading="lazy"/></div>
+          <div class="project-info"><p class="project-category">Digital Art</p><h3 class="project-title">Chelsea vs Arsenal</h3><p class="project-desc">Football Graphic — Roblox Cloth Multipurpose Rigs.</p></div>
+          <div class="project-overlay"><a href="#" class="project-view-btn">View Project →</a></div>
+        </div>
+        <div class="project-card" data-slot="3">
+          <div class="project-img"><img src="images/pro3.png" alt="Forest" loading="lazy"/></div>
+          <div class="project-info"><p class="project-category">Digital Art</p><h3 class="project-title">In a Forest</h3><p class="project-desc">Ninja in a forest.</p></div>
+          <div class="project-overlay"><a href="#" class="project-view-btn">View Project →</a></div>
+        </div>
+        <div class="project-card" data-slot="4">
+          <div class="project-img"><img src="images/pro4.png" alt="Detective" loading="lazy"/></div>
+          <div class="project-info"><p class="project-category">Digital Art</p><h3 class="project-title">Detectives</h3><p class="project-desc">Two people investigating a case.</p></div>
+          <div class="project-overlay"><a href="#" class="project-view-btn">View Project →</a></div>
+        </div>
+        <div class="project-card" data-slot="5">
+          <div class="project-img"><img src="images/pro5.png" alt="Soldier" loading="lazy"/></div>
+          <div class="project-info"><p class="project-category">Digital Art</p><h3 class="project-title">Winter Soldiers</h3><p class="project-desc">Military in a heavy blizzard of snow.</p></div>
+          <div class="project-overlay"><a href="#" class="project-view-btn">View Project →</a></div>
+        </div>
+        <div class="project-card" data-slot="6"><div class="project-img"></div><div class="project-info"><p class="project-category">Social Media</p><h3 class="project-title">PROJECT NAME</h3><p class="project-desc">Short description.</p></div><div class="project-overlay"><a href="#" class="project-view-btn">View Project →</a></div></div>
+        <div class="project-card" data-slot="7"><div class="project-img"></div><div class="project-info"><p class="project-category">Poster Design</p><h3 class="project-title">PROJECT NAME</h3><p class="project-desc">Short description.</p></div><div class="project-overlay"><a href="#" class="project-view-btn">View Project →</a></div></div>
+      </div>
+      <div class="projects-empty" id="projectsEmpty">// No projects added yet</div>
+    </div>
+  </div>
+
+  <!-- ═══ ABOUT ═══ -->
+  <section id="about">
+    <div class="section-header fade-up">
+      <span class="section-tag">// 001</span>
+      <h2 class="section-title">ABOUT</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-wrap">
+      <div class="about-img-wrap fade-up">
+        <div class="about-img-inner">
+          <!-- ✏️ Replace zynpfp.png with your profile image -->
+          <img src="images/zynpfp.png" alt="Zynkris" loading="lazy"/>
+        </div>
+      </div>
+      <div class="fade-up">
+        <!-- ✏️ Update name, role, bio, skill pills -->
+        <h3 class="about-name">Zynkris</h3>
+        <p class="about-role-tag">Graphics Artist · Visual Designer · Digital Creator</p>
+        <p class="about-bio">I'm a passionate graphic artist and visual designer specializing in Blender ART and Roblox Graphics. I create visuals that push boundaries and tell stories that resonate. Every pixel is intentional. Every design has a purpose.</p>
+        <div class="skills-wrap">
+          <span class="skill-pill">Photopea</span>
+          <span class="skill-pill">Blender</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-logo">Zyn Graphics</span>
+    <span class="footer-copy">© 2026 — All rights reserved</span>
+  </footer>
+
+  <script>
+    /* CURSOR */
+    const cursor=document.getElementById('cursor'), ring=document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function tick(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+    document.querySelectorAll('a,button,.project-card.has-image,.skill-pill,.strip-item').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.cssText+='width:18px;height:18px;background:var(--magenta);box-shadow:0 0 14px var(--magenta),0 0 28px var(--magenta);';ring.style.cssText+='width:54px;height:54px;border-color:rgba(255,0,110,0.4);';});
+      el.addEventListener('mouseleave',()=>{cursor.style.cssText+='width:8px;height:8px;background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px rgba(0,245,255,0.5);';ring.style.cssText+='width:32px;height:32px;border-color:rgba(0,245,255,0.4);';});
+    });
+
+    /* SILKY WAVE CANVAS */
+    (function(){
+      const c=document.getElementById('heroCanvas'),ctx=c.getContext('2d');
+      let W,H,t=0;
+      const resize=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;};
+      resize(); window.addEventListener('resize',resize);
+      const waves=[
+        {a:0.15,f:1.1,s:0.004,p:0,   b:0.17},
+        {a:0.09,f:2.2,s:0.006,p:1.4, b:0.11},
+        {a:0.07,f:3.1,s:0.008,p:3.1, b:0.07},
+        {a:0.05,f:4.6,s:0.010,p:4.9, b:0.05},
+        {a:0.19,f:0.6,s:0.003,p:0.7, b:0.21},
+      ];
+      function draw(){
+        t++;
+        ctx.fillStyle='#070a0f'; ctx.fillRect(0,0,W,H);
+        waves.forEach(w=>{
+          const b=Math.round(w.b*255);
+          ctx.beginPath(); ctx.moveTo(0,H);
+          for(let x=0;x<=W;x+=2){
+            const nx=x/W;
+            const y=H*0.5+Math.sin(nx*Math.PI*w.f+t*w.s+w.p)*H*w.a+Math.sin(nx*Math.PI*w.f*0.55+t*w.s*1.5+w.p*0.5)*H*w.a*0.45;
+            ctx.lineTo(x,y);
+          }
+          ctx.lineTo(W,H); ctx.closePath();
+          const g=ctx.createLinearGradient(0,0,W*0.4,H);
+          g.addColorStop(0,`rgba(${b+6},${b+6},${b+10},0.92)`);
+          g.addColorStop(0.45,`rgba(${b+18},${b+18},${b+22},0.72)`);
+          g.addColorStop(1,`rgba(${b},${b},${b+3},0.48)`);
+          ctx.fillStyle=g; ctx.fill();
+        });
+        const sh=ctx.createLinearGradient(0,H*0.27,0,H*0.57);
+        sh.addColorStop(0,'rgba(255,255,255,0)');
+        sh.addColorStop(0.5,'rgba(255,255,255,0.022)');
+        sh.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.fillStyle=sh; ctx.fillRect(0,0,W,H);
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    /* PROJECTS */
+    function checkProjects(){
+      let any=false;
+      document.querySelectorAll('.project-card').forEach(c=>{
+        const img=c.querySelector('.project-img img');
+        img?(c.classList.add('has-image'),any=true):c.classList.remove('has-image');
+      });
+      document.getElementById('projectsEmpty').style.display=any?'none':'block';
+    }
+    checkProjects();
+    if(sessionStorage.getItem('openWork')){sessionStorage.removeItem('openWork');setTimeout(()=>toggleWork({preventDefault:()=>{}}),400);}
+    function toggleWork(e){
+      e.preventDefault();
+      const d=document.getElementById('projects'),b=document.getElementById('workBtn'),open=d.classList.contains('open');
+      d.classList.toggle('open'); b.classList.toggle('open');
+      if(!open) setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),100);
+    }
+
+    /* NAV */
+    document.getElementById('navToggle').addEventListener('click',()=>{
+      document.getElementById('navToggle').classList.toggle('open');
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+    document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{
+      document.getElementById('navToggle').classList.remove('open');
+      document.getElementById('navLinks').classList.remove('open');
+    }));
+
+    /* FADE UP */
+    const obs=new IntersectionObserver(entries=>entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*80);}),{threshold:0.08});
+    document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+    document.querySelector('.hero .fade-up').classList.add('visible');
+  </script>
+</body>
+</html>

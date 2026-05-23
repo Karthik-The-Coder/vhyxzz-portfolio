@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zyn Graphics — Contact</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <style>
+    .page-hero {
+      min-height: 58vh; display: flex; align-items: flex-end;
+      padding: 140px 48px 72px; position: relative; overflow: hidden; background: var(--dark);
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 60% at 80% 35%, rgba(168,85,247,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 15% 75%, rgba(0,245,255,0.04) 0%, transparent 65%);
+    }
+    .page-hero-dots {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse 65% 75% at 80% 35%, black 10%, transparent 70%);
+    }
+    .page-hero-inner { position: relative; z-index: 1; max-width: 760px; }
+    .page-breadcrumb { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 13px; color: var(--text); opacity: 0.45; text-decoration: none; margin-bottom: 40px; transition: opacity 0.2s; }
+    .page-breadcrumb:hover { opacity: 0.8; }
+    .page-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; opacity: 0.75; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--purple); }
+    .page-tag::before { content: '//'; opacity: 0.5; }
+    .page-title { font-family: var(--display); line-height: 0.88; letter-spacing: 3px; margin-bottom: 20px; font-size: clamp(72px, 11vw, 148px); }
+    .page-title .t-white   { color: #fff; display: block; }
+    .page-title .t-outline { display: block; color: transparent; -webkit-text-stroke: 1.5px rgba(168,85,247,0.6); filter: drop-shadow(0 0 8px rgba(168,85,247,0.35)); }
+    .page-sub { font-family: var(--sans); font-size: 16px; font-weight: 300; color: var(--text); line-height: 1.75; max-width: 440px; }
+
+    /* ── CONTACT CARDS ── */
+    #contact-cards { background: var(--dark2); }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; max-width: 900px; }
+
+    .contact-card {
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px 28px;
+      text-decoration: none; display: flex; flex-direction: column; gap: 18px;
+      position: relative; overflow: hidden; transition: all 0.28s ease;
+    }
+    .contact-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .contact-card:hover { transform: translateY(-5px); }
+
+    /* Per-platform accent colors */
+    .contact-card.discord { border-color: rgba(88,101,242,0.15); }
+    .contact-card.discord:hover { border-color: rgba(88,101,242,0.45); box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 36px rgba(88,101,242,0.08); }
+    .contact-card.twitter { border-color: rgba(255,255,255,0.08); }
+    .contact-card.twitter:hover { border-color: rgba(255,255,255,0.25); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+    .contact-card.server  { border-color: rgba(0,245,255,0.1); }
+    .contact-card.server:hover  { border-color: rgba(0,245,255,0.35); box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 36px rgba(0,245,255,0.07); }
+
+    .card-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .discord .card-icon { background: rgba(88,101,242,0.15); }
+    .twitter .card-icon { background: rgba(255,255,255,0.07); }
+    .server  .card-icon { background: rgba(0,245,255,0.1); }
+
+    .card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.5; margin-bottom: 4px; }
+    .discord .card-label { color: #5865f2; }
+    .twitter .card-label { color: var(--text-hi); }
+    .server  .card-label { color: var(--cyan); }
+
+    .card-handle { font-family: var(--sans); font-size: 20px; font-weight: 600; color: var(--white); letter-spacing: -0.3px; }
+    .card-desc   { font-family: var(--sans); font-size: 13px; color: var(--text); opacity: 0.5; line-height: 1.5; flex: 1; }
+
+    .card-action {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--sans); font-size: 13px; font-weight: 500;
+      padding: 9px 18px; border-radius: 999px; margin-top: auto;
+      align-self: flex-start; transition: all 0.2s;
+    }
+    .discord .card-action { color: #5865f2; background: rgba(88,101,242,0.1); border: 1px solid rgba(88,101,242,0.2); }
+    .discord .card-action:hover { background: rgba(88,101,242,0.2); }
+    .twitter .card-action { color: var(--text-hi); background: rgba(255,255,255,0.06); border: 1px solid var(--border2); }
+    .twitter .card-action:hover { background: rgba(255,255,255,0.1); }
+    .server  .card-action { color: var(--cyan); background: rgba(0,245,255,0.07); border: 1px solid rgba(0,245,255,0.2); }
+    .server  .card-action:hover { background: rgba(0,245,255,0.14); }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 110px 24px 56px; }
+      #contact-cards { padding: 64px 24px; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Zyn Graphics</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html" onclick="sessionStorage.setItem('openWork','1')">Work</a></li>
+      <li><a href="commissions.html">Commissions</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="contact.html" class="nav-cta" style="border-color:rgba(168,85,247,0.4);color:var(--purple);">Contact Us</a></li>
+    </ul>
+    <button class="nav-dots" aria-label="Menu"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></button>
+  </nav>
+
+  <section class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-dots"></div>
+    <div class="page-hero-inner">
+      <a href="index.html" class="page-breadcrumb fade-up">← Portfolio</a>
+      <p class="page-tag fade-up">Get in Touch</p>
+      <h1 class="page-title fade-up">
+        <span class="t-white glitch" data-text="REACH">REACH</span>
+        <span class="t-outline">OUT</span>
+      </h1>
+      <p class="page-sub fade-up">Want to collab, commission, or just say hi? Pick a platform below and slide in.</p>
+    </div>
+  </section>
+
+  <section id="contact-cards">
+    <div class="section-header fade-up">
+      <span class="section-tag">// 001</span>
+      <h2 class="section-title">LINKS</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="cards-grid fade-up">
+      <!-- ✏️ Line 97 — Update Discord username -->
+      <a href="https://discord.com/users/YOUR_DISCORD_ID" target="_blank" class="contact-card discord">
+        <div class="card-icon">💬</div>
+        <div>
+          <p class="card-label">Discord DM</p>
+          <h3 class="card-handle">@your_username</h3>
+        </div>
+        <p class="card-desc">Fastest way to reach me. Slide in for commissions, collabs, or questions.</p>
+        <span class="card-action">Message Me →</span>
+      </a>
+      <!-- ✏️ Line 108 — Update Discord server link -->
+      <a href="https://discord.gg/ZP9a6bmR74" target="_blank" class="contact-card server">
+        <div class="card-icon">🖥️</div>
+        <div>
+          <p class="card-label">Discord Server</p>
+          <h3 class="card-handle">Zyn Graphics</h3>
+        </div>
+        <p class="card-desc">Join the server to view updates, open slots, and community posts.</p>
+        <span class="card-action">Join Server →</span>
+      </a>
+      <!-- ✏️ Line 119 — Update X/Twitter handle & link -->
+      <a href="https://x.com/YOUR_HANDLE" target="_blank" class="contact-card twitter">
+        <div class="card-icon">𝕏</div>
+        <div>
+          <p class="card-label">X / Twitter</p>
+          <h3 class="card-handle">@your_handle</h3>
+        </div>
+        <p class="card-desc">Follow for portfolio drops, WIPs, and random thoughts.</p>
+        <span class="card-action">Follow →</span>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-logo">Zyn Graphics</span>
+    <span class="footer-copy">© 2026 — All rights reserved</span>
+  </footer>
+
+  <script>
+    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function tick(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+    document.querySelectorAll('a,button').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.cssText+='width:18px;height:18px;background:var(--magenta);box-shadow:0 0 14px var(--magenta),0 0 28px var(--magenta);';ring.style.cssText+='width:54px;height:54px;border-color:rgba(255,0,110,0.4);';});
+      el.addEventListener('mouseleave',()=>{cursor.style.cssText+='width:8px;height:8px;background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px rgba(0,245,255,0.5);';ring.style.cssText+='width:32px;height:32px;border-color:rgba(0,245,255,0.4);';});
+    });
+    document.getElementById('navToggle').addEventListener('click',()=>{document.getElementById('navToggle').classList.toggle('open');document.getElementById('navLinks').classList.toggle('open');});
+    document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('navToggle').classList.remove('open');document.getElementById('navLinks').classList.remove('open');}));
+    const obs=new IntersectionObserver(entries=>entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*80);}),{threshold:0.08});
+    document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+    document.querySelectorAll('.fade-up').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*120));
+  </script>
+</body>
+</html>

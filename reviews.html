@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zyn Graphics — Reviews</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <style>
+    .page-hero {
+      min-height: 58vh; display: flex; align-items: flex-end;
+      padding: 140px 48px 72px; position: relative; overflow: hidden; background: var(--dark);
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 60% at 80% 35%, rgba(255,0,110,0.06) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 10% 70%, rgba(0,245,255,0.04) 0%, transparent 65%);
+    }
+    .page-hero-dots {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse 65% 75% at 80% 35%, black 10%, transparent 70%);
+    }
+    .page-hero-inner { position: relative; z-index: 1; max-width: 760px; }
+    .page-breadcrumb { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 13px; color: var(--text); opacity: 0.45; text-decoration: none; margin-bottom: 40px; transition: opacity 0.2s; }
+    .page-breadcrumb:hover { opacity: 0.8; }
+    .page-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; opacity: 0.75; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--magenta); }
+    .page-tag::before { content: '//'; opacity: 0.5; }
+    .page-title { font-family: var(--display); line-height: 0.88; letter-spacing: 3px; margin-bottom: 20px; font-size: clamp(72px, 11vw, 148px); }
+    .page-title .t-white   { color: #fff; display: block; }
+    .page-title .t-outline { display: block; color: transparent; -webkit-text-stroke: 1.5px rgba(255,0,110,0.55); filter: drop-shadow(0 0 8px rgba(255,0,110,0.3)); }
+    .page-sub { font-family: var(--sans); font-size: 16px; font-weight: 300; color: var(--text); line-height: 1.75; max-width: 440px; }
+
+    /* ── REVIEWS GRID ── */
+    #reviews-grid { background: var(--dark2); }
+    .reviews-masonry { columns: 3; column-gap: 14px; max-width: 1100px; }
+    .review-card {
+      break-inside: avoid; margin-bottom: 14px;
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px 22px;
+      position: relative; overflow: hidden; transition: all 0.28s ease;
+    }
+    .review-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .review-card:hover { border-color: rgba(255,0,110,0.2); transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 24px rgba(255,0,110,0.05); }
+
+    .review-stars { display: flex; gap: 3px; margin-bottom: 12px; }
+    .review-stars span { font-size: 13px; color: var(--yellow); }
+
+    .review-text { font-family: var(--sans); font-size: 14px; font-weight: 300; color: var(--text-hi); line-height: 1.7; margin-bottom: 18px; }
+
+    /* Quote mark — Zyn identity (30%) */
+    .review-quote-mark {
+      position: absolute; top: 14px; right: 18px;
+      font-family: var(--display); font-size: 60px; line-height: 1;
+      color: var(--magenta); opacity: 0.07; pointer-events: none; user-select: none;
+    }
+
+    .review-author { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+    .review-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 11px; color: #000; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .review-name { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--white); letter-spacing: -0.1px; }
+    .review-tag  { font-family: var(--mono); font-size: 10px; color: var(--text); opacity: 0.4; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* ── SUBMIT FORM ── */
+    #submit { background: var(--dark); }
+    .submit-wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; max-width: 980px; }
+    .submit-info-title { font-family: var(--sans); font-size: 28px; font-weight: 700; color: var(--white); letter-spacing: -0.4px; margin-bottom: 12px; }
+    .submit-info-body  { font-size: 15px; font-weight: 300; color: var(--text); line-height: 1.75; margin-bottom: 24px; }
+    .trust-list { display: flex; flex-direction: column; gap: 10px; }
+    .trust-item { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--text); }
+    .trust-dot  { width: 5px; height: 5px; border-radius: 50%; background: var(--magenta); box-shadow: 0 0 6px rgba(255,0,110,0.5); flex-shrink: 0; }
+
+    /* Webdorks form style */
+    .review-form { background: var(--dark3); border: 1px solid var(--border); border-radius: 20px; padding: 32px; }
+    .form-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .form-label { font-family: var(--sans); font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.3px; }
+    .form-input, .form-textarea {
+      font-family: var(--sans); font-size: 14px; color: var(--white);
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 11px 16px; outline: none;
+      transition: all 0.2s; width: 100%; resize: none;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.18); }
+    .form-input:focus, .form-textarea:focus { border-color: rgba(255,0,110,0.4); background: rgba(255,255,255,0.06); box-shadow: 0 0 0 3px rgba(255,0,110,0.08); }
+    .form-textarea { min-height: 100px; }
+
+    .star-row { display: flex; gap: 6px; }
+    .star-btn { font-size: 20px; background: none; border: none; cursor: none; opacity: 0.3; transition: all 0.15s; }
+    .star-btn.active, .star-btn:hover { opacity: 1; transform: scale(1.15); }
+
+    .form-submit {
+      font-family: var(--sans); font-size: 14px; font-weight: 500;
+      color: #000; background: var(--magenta); border: none;
+      padding: 13px 28px; border-radius: 999px; cursor: none;
+      transition: all 0.22s; display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 0 18px rgba(255,0,110,0.35); margin-top: 8px;
+    }
+    .form-submit:hover { background: #fff; box-shadow: 0 0 32px rgba(255,0,110,0.55); transform: translateY(-1px); }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 110px 24px 56px; }
+      #reviews-grid, #submit { padding: 64px 24px; }
+      .reviews-masonry { columns: 1; }
+      .submit-wrap { grid-template-columns: 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .reviews-masonry { columns: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Zyn Graphics</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html" onclick="sessionStorage.setItem('openWork','1')">Work</a></li>
+      <li><a href="commissions.html">Commissions</a></li>
+      <li><a href="reviews.html" style="color:var(--magenta);">Reviews</a></li>
+      <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="nav-dots" aria-label="Menu"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></button>
+  </nav>
+
+  <section class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-dots"></div>
+    <div class="page-hero-inner">
+      <a href="index.html" class="page-breadcrumb fade-up">← Portfolio</a>
+      <p class="page-tag fade-up">Client Love</p>
+      <h1 class="page-title fade-up">
+        <span class="t-white glitch" data-text="CLIENT">CLIENT</span>
+        <span class="t-outline">REVIEWS</span>
+      </h1>
+      <p class="page-sub fade-up">Real words from real clients. Every review is submitted and verified — no filters, no edits.</p>
+    </div>
+  </section>
+
+  <section id="reviews-grid">
+    <div class="section-header fade-up">
+      <span class="section-tag">// 001</span>
+      <h2 class="section-title">REVIEWS</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="reviews-masonry fade-up" id="reviewsMasonry">
+      <!-- Starter placeholder reviews — replace or add more via the form below -->
+      <div class="review-card">
+        <div class="review-quote-mark">"</div>
+        <div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="review-text">Absolutely insane work. The GFX came out exactly how I imagined it, and the turnaround was fast. Will definitely be back.</p>
+        <div class="review-author"><div class="review-avatar">CL</div><div><p class="review-name">Client Name</p><p class="review-tag">Logo Commission</p></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-quote-mark">"</div>
+        <div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="review-text">Best thumbnail I've ever gotten. The lighting and composition were on another level. 10/10 no hesitation.</p>
+        <div class="review-author"><div class="review-avatar">CL</div><div><p class="review-name">Client Name</p><p class="review-tag">Thumbnail Commission</p></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-quote-mark">"</div>
+        <div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="review-text">Super easy to work with. Communicated clearly throughout and the final result was fire. Highly recommend.</p>
+        <div class="review-author"><div class="review-avatar">CL</div><div><p class="review-name">Client Name</p><p class="review-tag">Digital Art</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="submit">
+    <div class="section-header fade-up">
+      <span class="section-tag">// 002</span>
+      <h2 class="section-title">SUBMIT</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="submit-wrap">
+      <div class="fade-up">
+        <h3 class="submit-info-title">Worked with me?<br/>Leave a review.</h3>
+        <p class="submit-info-body">Your feedback means a lot. It helps other clients know what to expect and helps me grow as an artist.</p>
+        <div class="trust-list">
+          <div class="trust-item"><span class="trust-dot"></span>All reviews are read personally</div>
+          <div class="trust-item"><span class="trust-dot"></span>Honest feedback welcome</div>
+          <div class="trust-item"><span class="trust-dot"></span>No account needed</div>
+        </div>
+      </div>
+      <div class="review-form fade-up">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" type="text" placeholder="YourName" id="rName"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Commission Type</label>
+            <input class="form-input" type="text" placeholder="Logo / Thumbnail / etc." id="rType"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rating</label>
+          <div class="star-row" id="starRow">
+            <button class="star-btn" data-v="1">★</button>
+            <button class="star-btn" data-v="2">★</button>
+            <button class="star-btn" data-v="3">★</button>
+            <button class="star-btn" data-v="4">★</button>
+            <button class="star-btn" data-v="5">★</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Review</label>
+          <textarea class="form-textarea" placeholder="Tell us about your experience..." id="rText"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitReview()">Submit Review →</button>
+        <p id="rMsg" style="font-size:13px;margin-top:12px;display:none;"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-logo">Zyn Graphics</span>
+    <span class="footer-copy">© 2026 — All rights reserved</span>
+  </footer>
+
+  <script>
+    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function tick(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+    document.querySelectorAll('a,button,.review-card').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.cssText+='width:18px;height:18px;background:var(--magenta);box-shadow:0 0 14px var(--magenta),0 0 28px var(--magenta);';ring.style.cssText+='width:54px;height:54px;border-color:rgba(255,0,110,0.4);';});
+      el.addEventListener('mouseleave',()=>{cursor.style.cssText+='width:8px;height:8px;background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px rgba(0,245,255,0.5);';ring.style.cssText+='width:32px;height:32px;border-color:rgba(0,245,255,0.4);';});
+    });
+
+    /* Stars */
+    let rating=0;
+    document.querySelectorAll('.star-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        rating=+btn.dataset.v;
+        document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('active',i<rating));
+      });
+    });
+
+    /* Submit */
+    function submitReview(){
+      const name=document.getElementById('rName').value.trim();
+      const type=document.getElementById('rType').value.trim();
+      const text=document.getElementById('rText').value.trim();
+      const msg=document.getElementById('rMsg');
+      if(!name||!text||!rating){ msg.style.display='block'; msg.style.color='var(--magenta)'; msg.textContent='Please fill in all fields and select a rating.'; return; }
+      const stars='★'.repeat(rating)+'☆'.repeat(5-rating);
+      const init=name.slice(0,2).toUpperCase();
+      const card=document.createElement('div'); card.className='review-card';
+      card.innerHTML=`<div class="review-quote-mark">"</div><div class="review-stars">${[...stars].map(s=>`<span>${s}</span>`).join('')}</div><p class="review-text">${text}</p><div class="review-author"><div class="review-avatar">${init}</div><div><p class="review-name">${name}</p><p class="review-tag">${type||'Commission'}</p></div></div>`;
+      document.getElementById('reviewsMasonry').prepend(card);
+      document.getElementById('rName').value=''; document.getElementById('rType').value=''; document.getElementById('rText').value=''; rating=0;
+      document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('active'));
+      msg.style.display='block'; msg.style.color='var(--cyan)'; msg.textContent='✓ Review submitted — thanks!';
+      setTimeout(()=>msg.style.display='none',3500);
+    }
+
+    document.getElementById('navToggle').addEventListener('click',()=>{document.getElementById('navToggle').classList.toggle('open');document.getElementById('navLinks').classList.toggle('open');});
+    document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('navToggle').classList.remove('open');document.getElementById('navLinks').classList.remove('open');}));
+    const obs=new IntersectionObserver(entries=>entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*80);}),{threshold:0.08});
+    document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+    document.querySelectorAll('.fade-up').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*120));
+  </script>
+</body>
+</html>
